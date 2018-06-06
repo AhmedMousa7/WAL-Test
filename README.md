@@ -1,2 +1,4 @@
 # WAL-Test
-this repo is implementation of dagger2 , rxjava , clean architecture and architecture component using kotlin
+
+# This repository is an implementation of clean architecture + dagger2 + rxjava + liveData and viewModel using kotlin
+
