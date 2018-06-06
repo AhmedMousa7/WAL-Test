@@ -1,8 +1,6 @@
 package com.ahmedmousa.waltest.base.data.model
 
-/**
- * Created by karn on 18/1/18.
- */
+
 sealed class MyResponse<T> {
 
     data class Progress<T>(var loading: Boolean) : MyResponse<T>()

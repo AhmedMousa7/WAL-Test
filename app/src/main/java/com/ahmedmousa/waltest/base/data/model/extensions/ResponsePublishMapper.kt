@@ -6,9 +6,6 @@ import com.ahmedmousa.waltest.base.data.model.MyResponse
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 
-/**
- * Created by karn on 18/1/18.
- **/
 
 /**
  * Extension function to convert a Publish subject into a LiveData by subscribing to it.
