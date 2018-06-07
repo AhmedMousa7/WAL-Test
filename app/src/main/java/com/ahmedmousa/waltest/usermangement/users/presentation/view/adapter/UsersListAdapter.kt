@@ -31,10 +31,7 @@ class UsersListAdapter : RecyclerView.Adapter<UsersListAdapter.UsersListViewHold
 
     override fun onBindViewHolder(holder: UsersListViewHolder, position: Int) {
         val userInfo : UserEntity = list[position]
-        holder.bindView(userInfo)
-
-        //here emits value
-        holder.itemView.setOnClickListener {
+        holder.bindView(userInfo){
             clickEvent.onNext(userInfo)
         }
     }
@@ -58,11 +55,12 @@ class UsersListAdapter : RecyclerView.Adapter<UsersListAdapter.UsersListViewHold
 
         private val imgUser : CircleImageView = view.findViewById(R.id.imgUser)
 
-        fun bindView(userInfo: UserEntity) {
+        fun bindView(userInfo: UserEntity, onItemClick:(View)->Unit) {
 
             tvUserName.text = userInfo.login
 
             Glide.with(itemView).load(userInfo.avatar_url).into(imgUser)
+            itemView.setOnClickListener(onItemClick)
         }
     }
 
