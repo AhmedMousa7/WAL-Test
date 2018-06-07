@@ -4,12 +4,8 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
 import com.ahmedmousa.waltest.R
 import com.ahmedmousa.waltest.base.data.model.MyResponse
 import com.ahmedmousa.waltest.base.presentation.view.fragment.FragmentLoading
@@ -17,13 +13,12 @@ import com.ahmedmousa.waltest.base.presentation.viewmodel.ViewModelFactory
 import com.ahmedmousa.waltest.usermangement.base.presentation.view.listener.OnReplaceFragmentListener
 import com.ahmedmousa.waltest.usermangement.base.domain.entity.UserEntity
 import com.ahmedmousa.waltest.usermangement.users.presentation.view.adapter.UsersListAdapter
-import com.ahmedmousa.waltest.usermangement.users.presentation.view.listener.UserProfileCallBack
 import com.ahmedmousa.waltest.usermangement.users.presentation.viewmodel.UsersListViewModel
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_users_layout.*
 import javax.inject.Inject
 
-class FragmentUsersList : FragmentLoading() , UserProfileCallBack {
+class FragmentUsersList : FragmentLoading() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory<UsersListViewModel>
@@ -51,6 +46,11 @@ class FragmentUsersList : FragmentLoading() , UserProfileCallBack {
 
         rcvUsers.layoutManager = LinearLayoutManager(activity , LinearLayoutManager.VERTICAL , false)
         rcvUsers.adapter = usersListAdapter
+
+        //subscribe to on onClick
+        usersListAdapter.clickEvent.subscribe {
+            onShowUserProfile(it)
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -71,8 +71,6 @@ class FragmentUsersList : FragmentLoading() , UserProfileCallBack {
 
                     //set data
                     usersListAdapter.setUsersData(response.data)
-                    //set Listener
-                    usersListAdapter.setProfileCallBackListener(this)
                 }
 
                 is MyResponse.Failure -> showError("Error in connection")
@@ -81,7 +79,7 @@ class FragmentUsersList : FragmentLoading() , UserProfileCallBack {
         })
     }
 
-    override fun onShowUserProfile(userEntity: UserEntity) {
+    private fun onShowUserProfile(userEntity: UserEntity) {
         val bundle = Bundle()
         bundle.putString("userName" , userEntity.login)
         onReplaceFragmentListener.onOpenDetailsFragment(bundle)

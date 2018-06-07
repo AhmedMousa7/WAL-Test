@@ -7,15 +7,15 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.ahmedmousa.waltest.R
 import com.ahmedmousa.waltest.usermangement.base.domain.entity.UserEntity
-import com.ahmedmousa.waltest.usermangement.users.presentation.view.listener.UserProfileCallBack
 import com.bumptech.glide.Glide
 import de.hdodenhof.circleimageview.CircleImageView
-import javax.inject.Inject
+import io.reactivex.subjects.PublishSubject
 
 class UsersListAdapter : RecyclerView.Adapter<UsersListAdapter.UsersListViewHolder>() {
 
     private var list : List<UserEntity>
-    private lateinit var userProfileCallBack : UserProfileCallBack
+
+    val clickEvent : PublishSubject<UserEntity>  = PublishSubject.create<UserEntity>()
 
     init {
         list = emptyList()
@@ -32,6 +32,16 @@ class UsersListAdapter : RecyclerView.Adapter<UsersListAdapter.UsersListViewHold
     override fun onBindViewHolder(holder: UsersListViewHolder, position: Int) {
         val userInfo : UserEntity = list[position]
         holder.bindView(userInfo)
+
+        //here emits value
+        holder.itemView.setOnClickListener {
+            clickEvent.onNext(userInfo)
+        }
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        clickEvent.onComplete()
     }
 
     override fun getItemCount(): Int {
@@ -42,11 +52,7 @@ class UsersListAdapter : RecyclerView.Adapter<UsersListAdapter.UsersListViewHold
         this.list = list
     }
 
-    fun setProfileCallBackListener(userProfileCallBack : UserProfileCallBack){
-        this.userProfileCallBack = userProfileCallBack
-    }
-
-    inner class UsersListViewHolder(private val view : View) : RecyclerView.ViewHolder(view) {
+    class UsersListViewHolder(view : View) : RecyclerView.ViewHolder(view) {
 
         private val tvUserName : TextView = view.findViewById(R.id.tvUserName)
 
@@ -56,11 +62,7 @@ class UsersListAdapter : RecyclerView.Adapter<UsersListAdapter.UsersListViewHold
 
             tvUserName.text = userInfo.login
 
-            Glide.with(view).load(userInfo.avatar_url).into(imgUser)
-
-            view.setOnClickListener({
-                userProfileCallBack.onShowUserProfile(userInfo)
-            })
+            Glide.with(itemView).load(userInfo.avatar_url).into(imgUser)
         }
     }
 
