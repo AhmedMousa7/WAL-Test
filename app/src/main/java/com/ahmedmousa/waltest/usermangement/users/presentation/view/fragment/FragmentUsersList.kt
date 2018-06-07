@@ -15,6 +15,7 @@ import com.ahmedmousa.waltest.usermangement.base.domain.entity.UserEntity
 import com.ahmedmousa.waltest.usermangement.users.presentation.view.adapter.UsersListAdapter
 import com.ahmedmousa.waltest.usermangement.users.presentation.viewmodel.UsersListViewModel
 import dagger.android.support.AndroidSupportInjection
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_users_layout.*
 import javax.inject.Inject
 
@@ -26,6 +27,8 @@ class FragmentUsersList : FragmentLoading() {
     private lateinit var userListViewModel: UsersListViewModel
 
     private lateinit var onReplaceFragmentListener: OnReplaceFragmentListener
+
+    private lateinit var clickEventDisposable : Disposable
 
     @Inject
     lateinit var usersListAdapter: UsersListAdapter
@@ -48,9 +51,7 @@ class FragmentUsersList : FragmentLoading() {
         rcvUsers.adapter = usersListAdapter
 
         //subscribe to on onClick
-        usersListAdapter.clickEvent.subscribe {
-            onShowUserProfile(it)
-        }
+        clickEventDisposable = usersListAdapter.clickEvent.subscribe(this::onShowUserProfile)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -83,5 +84,12 @@ class FragmentUsersList : FragmentLoading() {
         val bundle = Bundle()
         bundle.putString("userName" , userEntity.login)
         onReplaceFragmentListener.onOpenDetailsFragment(bundle)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        with(clickEventDisposable){
+            takeIf { isDisposed }.apply { dispose() }
+        }
     }
 }
