@@ -50,7 +50,6 @@ class FragmentUsersList : FragmentLoading() {
         rcvUsers.layoutManager = LinearLayoutManager(activity , LinearLayoutManager.VERTICAL , false)
         rcvUsers.adapter = usersListAdapter
 
-        //subscribe to on onClick
         clickEventDisposable = usersListAdapter.clickEvent.subscribe(this::onShowUserProfile)
     }
 
@@ -84,6 +83,15 @@ class FragmentUsersList : FragmentLoading() {
         val bundle = Bundle()
         bundle.putString("userName" , userEntity.login)
         onReplaceFragmentListener.onOpenDetailsFragment(bundle)
+    }
+
+    private fun subscribeToAdapterClick(){
+        if (clickEventDisposable.isDisposed) clickEventDisposable = usersListAdapter.clickEvent.subscribe(this::onShowUserProfile)
+    }
+
+    override fun onResume() {
+        super.onResume()
+       subscribeToAdapterClick()
     }
 
     override fun onStop() {
