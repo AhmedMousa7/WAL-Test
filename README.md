@@ -6,4 +6,4 @@ I have used github public web services to get a list of users and display it in 
 
 this project contains one activity and two fragments, one fragment to display a list of users, second fragment to display a specific user profile.
 
-- and last not least any one have an comment or opinion in this project architecture , you are welcome any time . 
+And last but not least any one have an comment or opinion in this project architecture, you are welcome any time . 
