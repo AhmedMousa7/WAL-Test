@@ -1,6 +1,6 @@
 # WAL-Test Project
 
-This repository while learning clean architecture + dagger2 + rxjava + liveData and viewModel using kotlin
+I used this repository while learning clean architecture + dagger2 + rxjava + liveData and viewModel using kotlin
 
 I have used github public web services to get a list of users and display it in a recyclerview 
 
