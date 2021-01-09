@@ -8,7 +8,7 @@ import javax.inject.Inject
 class UserMapper @Inject constructor(){
 
     fun map(user : User?) : UserEntity {
-        return UserEntity(login = user!!.login , url = user.url , avatar_url = user.avatarUrl , location = user.location)
+        return UserEntity(login = user!!.login , url = user.htmlUrl , avatar_url = user.avatarUrl , location = user.location)
     }
 
     fun map(users : List<User>) : List<UserEntity> {
